@@ -23,4 +23,5 @@ class task{
 
         //Utility
         void print();
+        double percentsGotten();
 };

@@ -43,5 +43,13 @@ void task::setName(string n){
 void task::print(){
     cout << fixed;
     cout << setprecision(2);
-    cout << name << "   " << weight << "   " << mark << endl;
+    cout << name;
+    for(int i = name.length(); i < 16; i++) cout << " ";
+    cout << weight << "%    ";
+    if(mark != empty) cout << mark << "%";
+    cout << endl;
+}
+
+double task::percentsGotten(){
+    return ((mark*weight)/100);
 }

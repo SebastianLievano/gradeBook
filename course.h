@@ -19,7 +19,7 @@ class course{
         //Utility
         void menu();
         void print();
-        void getMark();
+        void getCurrentMark();
         void calculateMarks();
         void addTask();
         void removeTask(int taskNum);
