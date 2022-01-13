@@ -73,6 +73,7 @@ void classManagement(){
         }
         cout << "0) Return to Main menu" << endl << "1) Add Class" << 
         endl << "2) Delete Class" << endl;
+        cin >> input;
         if(input == 0) return;
         else if(input == 1){
             cout << "Please enter the name of your new class" << endl;
@@ -88,7 +89,14 @@ void classManagement(){
                 cout << "Invalid Input" << endl;
 
             }
-            classes.erase(classes.begin()+input-1);
+            else{
+                cout << "Are you sure you want to erase " << classes[input-1].getName() << "?" << endl;
+                cout << "Press 1 to confirm, anything else to cancel" << endl;
+                cin >> input;
+                if(cin.fail() || input != 1) cout << "Cancelled" << endl;
+                else classes.erase(classes.begin()+input-1);
+            }
+            
         }
         
     }
