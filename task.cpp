@@ -1,13 +1,6 @@
 #include "globals.h"
 #include "task.h"
 
-class task{
-    private:
-        string name;
-        double weight;
-        double mark;
-    public:
-        //Constructor
 task::task(string n, double w, double m){
     name = n;
     weight = w;
@@ -28,13 +21,27 @@ double task::getWeight(){
 double task::getMark(){
     return mark;
 }
-        string getName();
 
-        //Mutators
-        void setWeight(double w);
-        void setMark(double m);
-        void setName(string n);
+string task::getName(){
+    return name;
+}
 
-        //Utility
-        void print();
-};
+//Mutators
+void task::setWeight(double w){
+    weight = w;
+}
+        
+void task::setMark(double m){
+    mark = m;
+}
+        
+void task::setName(string n){
+    name = n;
+}
+
+//Utility
+void task::print(){
+    cout << fixed;
+    cout << setprecision(2);
+    cout << name << "   " << weight << "   " << mark << endl;
+}
