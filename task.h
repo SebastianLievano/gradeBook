@@ -1,1 +1,1 @@
-//Not empty
+#include "globals.h"
