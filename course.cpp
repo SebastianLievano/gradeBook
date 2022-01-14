@@ -8,9 +8,26 @@ course::course(string n){
     name = n;
 }
 
+
 //Accessors
 string course::getName(){
     return name;
+}
+
+int course::getTaskNum(){
+    return gradeBook.size();
+}
+
+string course::getTaskName(int taskNum){
+    return gradeBook[taskNum].getName();
+}
+
+double course::getTaskWeight(int taskNum){
+    return gradeBook[taskNum].getWeight();
+}
+
+double course::getTaskMark(int taskNum){
+    return gradeBook[taskNum].getMark();
 }
 
 //Mutators
@@ -103,7 +120,6 @@ void course::print(){
     for(int i = 0; i < gradeBook.size(); i++){
         cout << i+1 << ") ";
         gradeBook[i].print();
-        cout << endl;
     }
 }
         
@@ -170,6 +186,7 @@ void course::calculateMarks(){
             cin.clear();
             cout << "Invalid Input" << endl; goto invalid2;
         }
+        taskPivot -= 1;
     }
 
     for(int i = 0; i < gradeBook.size(); i++){
@@ -210,6 +227,7 @@ void course::calculateMarks(){
         cout << endl << "If there is a specific percent you'd like to calculate for, insert it below. To exit this menu, press 0" << endl;
         cin >> dummy;
         cin.ignore(mil,'\n');
+        if(dummy == 0) return;
         if(dummy < 0 || dummy > 100 || cin.fail()){ cout << "Invalid Input"; goto invalid4;}
         else req = markReq(dummy, pivotWeight, percentGotten);
         if(cin.fail() || req == -2){
@@ -217,7 +235,6 @@ void course::calculateMarks(){
             cout << "Invalid Input" << endl;
             goto invalid4;
         }
-        else if(req == 0) return;
         else if(req == -1){
             cout << "You can not get that mark" << endl;
             goto invalid4;
@@ -269,6 +286,8 @@ void course::addTask(){
             }
             else{
                 task n(input, weight, mark);
+                gradeBook.push_back(n);
+                return;
             }
         }
     }
@@ -359,3 +378,6 @@ void course::inputMark(int taskNum){
     else gradeBook[taskNum-1].setMark(newMarkWeight);
 }
 
+void course::addExistingTask(task ta){
+    gradeBook.push_back(ta);
+}

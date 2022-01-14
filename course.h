@@ -12,6 +12,10 @@ class course{
 
         //Accessors
         string getName();
+        int getTaskNum();
+        string getTaskName(int taskNum);
+        double getTaskWeight(int taskNum);
+        double getTaskMark(int taskNum);
 
         //Mutators
         void setName(string n);
@@ -25,5 +29,6 @@ class course{
         void removeTask(int taskNum);
         void editTask(int taskNum);
         void inputMark(int taskNum);
+        void addExistingTask(task ta);
 
 };

@@ -1,2 +1,10 @@
+2
+Test1
 4
-ECE241 4 
+Exam 50 -5
+HW 20 50
+Lab2 15 70
+Lab1 15 90
+Test2
+1
+Project 100 75

@@ -6,11 +6,16 @@ vector<course> classes;
 int openingMenu();
 void classManagement();
 
+void load(vector<course> & c);
+
+void save(vector<course> & c);
+
 void clearPage();
 
 int main(){
     int userInput;
     bool keepGoing = true;
+    load(classes);
     while(keepGoing){
         clearPage();
         userInput = openingMenu();
@@ -19,6 +24,7 @@ int main(){
         else if(userInput == 0) classManagement();
         else classes[userInput - 1].menu();
     }
+    save(classes);
     return 0;
 }
 
