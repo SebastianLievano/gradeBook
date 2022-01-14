@@ -1,10 +1,22 @@
-2
-Test1
 4
-Exam 50 -5
-HW 20 50
-Lab2 15 70
-Lab1 15 90
-Test2
+ECE244-C++
+6
+Lab1 5 100
+Lab2 10 100
+Lab3 10 90
+Lab4 15 90
+Midterm 25 80
+Final 35 -5
+ECE241-Verilog
+6
+Lab1 10 100
+Lab2 10 75
+Lab3 10 0
+Lab4 10 100
+Lab5 10 95
+Final 50 -5
+ECE297-Software
 1
-Project 100 75
+Project 100 100
+ECE212-Circuits
+0
