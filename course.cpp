@@ -145,14 +145,14 @@ void course::getCurrentMark(){
 //Enter Assumed Marks for all non inputted tasks or Enter 
 
 float markReq(float target, float pivotWeight, float otherMark){
-    float req, percentGotten, marksFromPivot;
+    float req, marksFromPivot;
     if(target > (otherMark + pivotWeight) || target < otherMark){
         return -1;
     }
-    //PercentGotten = NonPivotWeight*OtherMark/100
-    percentGotten = (100-pivotWeight)*otherMark/100;
+    cout << "Percents Gotten = " << otherMark << endl;
     //Target = MarksFromPivot + Percents Gotten
-    marksFromPivot = target - percentGotten;
+    marksFromPivot = target - otherMark;
+    cout << "Marks From Pivot = " << marksFromPivot << endl;
     //MarksFromPivot = Weight * req / 100 -> req = 100Mp / Weight
     req = 100 * marksFromPivot / pivotWeight;
     return req;
