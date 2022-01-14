@@ -1,5 +1,5 @@
-#include "globals.h"
 #include "task.h"
+
 
 task::task(string n, double w, double m){
     name = n;
@@ -53,3 +53,4 @@ void task::print(){
 double task::percentsGotten(){
     return ((mark*weight)/100);
 }
+

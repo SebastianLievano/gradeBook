@@ -1,5 +1,8 @@
-#include "globals.h"
 #include "course.h"
+
+void clearPage(){
+    for(int i = 0; i < 20; i++) cout << endl;
+}
 
 course::course(string n){
     name = n;
@@ -32,7 +35,9 @@ void course::menu(){
     "m) Get Current Mark" << endl <<
     "n) New Task" << endl;
     cin >> userInput;
+    cin.ignore(mil,'\n');
     if(cin.fail()){
+        cin.clear();
         cout << "Invalid input" << endl;
         goto invalid;
     }
@@ -50,7 +55,9 @@ void course::menu(){
             invalidTask:
             cout << "Please enter the number of the task you'd like to edit: ";
             cin >> taskNum;
+            cin.ignore(mil,'\n');
             if(cin.fail() || taskNum < 1 || taskNum > gradeBook.size()){
+                cin.clear();
                 cout << "Invalid input" << endl;
                 goto invalidTask;
             }
@@ -62,7 +69,9 @@ void course::menu(){
             invalidName:
             cout << "Please enter the number of the task you'd like to edit: ";
             cin >> taskNum;
+            cin.ignore(mil,'\n');
             if(cin.fail() || taskNum < 1 || taskNum > gradeBook.size()){
+                cin.clear();
                 cout << "Invalid input" << endl;
                 goto invalidName;
             }
@@ -147,7 +156,9 @@ void course::calculateMarks(){
     << "2) Guess all marks but one, then receive the required values for the non guessed mark to achieve certain grades" << endl
     << "    i.e) After your inputted marks: MAX(100 on task): 90%, MIN(0 on task): 50%, A: Need 75 on task, ..." << endl;
     cin >> userInput;
+    cin.ignore(mil,'\n');
     if(cin.fail() || userInput > 2 || userInput < 1){
+        cin.clear();
         cout << "Invalid Input" << endl << endl << endl;
         goto invalid1;
     }
@@ -155,7 +166,10 @@ void course::calculateMarks(){
         invalid2:
         cout << "Which task would you like to look at?" << endl;
         cin >> taskPivot;
-        if(cin.fail() || taskPivot < 1 || taskPivot > gradeBook.size()) cout << "Invalid Input" << endl; goto invalid2;
+        if(cin.fail() || taskPivot < 1 || taskPivot > gradeBook.size()){
+            cin.clear();
+            cout << "Invalid Input" << endl; goto invalid2;
+        }
     }
 
     for(int i = 0; i < gradeBook.size(); i++){
@@ -169,7 +183,12 @@ void course::calculateMarks(){
                     invalid3:
                     cout << "Please enter a mark from 0 to 100 for " << m << ". Weight: " << w;
                     cin >> dummy;
-                    if(cin.fail() || userInput < 0 || userInput > 100) cout << "Invalid Input" << endl; goto invalid3;
+                    cin.ignore(mil,'\n');
+                    if(cin.fail() || userInput < 0 || userInput > 100){
+                        cin.clear();
+                        cout << "Invalid Input" << endl; 
+                        goto invalid3;
+                    }
                     percentGotten += (userInput*w/100);
                     }
                 else percentGotten += (m*w/100);
@@ -190,9 +209,11 @@ void course::calculateMarks(){
         req = -2;
         cout << endl << "If there is a specific percent you'd like to calculate for, insert it below. To exit this menu, press 0" << endl;
         cin >> dummy;
+        cin.ignore(mil,'\n');
         if(dummy < 0 || dummy > 100 || cin.fail()){ cout << "Invalid Input"; goto invalid4;}
         else req = markReq(dummy, pivotWeight, percentGotten);
         if(cin.fail() || req == -2){
+            cin.clear();
             cout << "Invalid Input" << endl;
             goto invalid4;
         }
@@ -212,17 +233,21 @@ void course::addTask(){
     string input;
     float weight, mark;
     invalidStringInput:
-    cout << "Please enter the name of your task: (max 12 characters)" << endl;
+    cout << "Please enter the name of your task: (max 12 characters, no spaces)" << endl;
     cin >> input;
+    cin.ignore(mil,'\n');
     if(cin.fail() || input.length() > 12){
         cout << "Invalid Input" << endl;
+        cin.clear();
         goto invalidStringInput;
     }
     else{
         invalidWeightInput:
         cout << "Please enter the weight of your task: (between 0 and 100)" << endl;
         cin >> weight;
+        cin.ignore(mil,'\n');
         if(cin.fail() || weight < 0 || weight > 100){
+            cin.clear();
             cout << "Invalid Input" << endl;
             goto invalidWeightInput;
         }
@@ -231,7 +256,9 @@ void course::addTask(){
             cout << "If you would like to enter a mark for " << input << "please do so below" << endl 
             << "To skip this step, input any negative number" << endl << "Values above 100% will be accepted for mark" << endl;
             cin >> mark;
+            cin.ignore(mil,'\n');
             if(cin.fail()){
+                cin.clear();
                 cout << "Invalid Input" << endl;
                 goto invalidMarkInput;
             }
@@ -253,7 +280,9 @@ void course::removeTask(int taskNum){
     cout << "Are you sure you want to erase " << name << "? " << endl
     << "Enter 1 to confirm, anything else to cancel" << endl;
     cin >> input;
+    cin.ignore(mil,'\n');
     if(cin.fail() || input != 1){
+        cin.clear();
         cout << "Deletion cancelled" << endl;
         return;
     }
@@ -279,7 +308,9 @@ void course::editTask(int taskNum){
             invalidName:
             cout << "Enter new name (max 12 Chars): ";
             cin >> newName;
+            cin.ignore(mil,'\n');
             if(cin.fail() || newName.length() > 12){
+                cin.clear();
                 cout << endl << "Invalid Input" << endl;
                 goto invalidName;
             }
@@ -290,7 +321,9 @@ void course::editTask(int taskNum){
             invalidWeight:
             cout << "Enter new weight (max 100%): ";
             cin >> newMarkWeight;
+            cin.ignore(mil,'\n');
             if(cin.fail() || newMarkWeight < 0 || newMarkWeight > 100){
+                cin.clear();
                 cout << endl << "Invalid Input" << endl;
                 goto invalidWeight;
             }
@@ -317,7 +350,9 @@ void course::inputMark(int taskNum){
     invalidMark: 
     cout << "Enter new mark: ";
     cin >> newMarkWeight;
+    cin.ignore(mil,'\n');
     if(cin.fail() || newMarkWeight < 0){
+        cin.clear();
         cout << endl << "Invalid Input" << endl;
         goto invalidMark;
     }
