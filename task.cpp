@@ -38,14 +38,25 @@ void task::setMark(double m){
 void task::setName(string n){
     name = n;
 }
+/*Keeping Dots in Line:
 
+MARK
+100.00%
+ 50.00%
+  5.00%
+TASK NAME      WEIGHT     MARK
+*/
 //Utility
 void task::print(){
     cout << fixed;
     cout << setprecision(2);
     cout << name;
-    for(int i = name.length(); i < 16; i++) cout << " ";
-    cout << weight << "%    ";
+    for(int i = name.length(); i < 15; i++) cout << " ";
+    if(weight < 10) cout << " ";
+    cout << weight << "%";
+    cout << "     ";
+    if(mark < 10) cout << "  ";
+    else if(mark != 100) cout << " ";
     if(mark != empty) cout << mark << "%";
     cout << endl;
 }
