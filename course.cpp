@@ -1,13 +1,6 @@
 #include "globals.h"
 #include "course.h"
 
-class course{
-    private:
-        vector<task> gradeBook;
-        string name;
-    
-    public:
-        //Constructor
 course::course(string n){
     name = n;
 }
@@ -19,12 +12,80 @@ string course::getName(){
 
 //Mutators
 void course::setName(string n){
-    name = name;
+    name = n;
 }
 
 //Utility
 void course::menu(){
+    char userInput;
+    int taskNum;
+    restart:
+    clearPage();
+    invalid:
+    cout << endl;
     print();
+    cout << "OPTIONS" << endl;
+    cout << "x) Go back to Course List" << endl <<
+    "c) Calculate Marks" << endl <<
+    "e) Edit Tasks" << endl <<
+    "i) Input Mark" << endl << 
+    "m) Get Current Mark" << endl <<
+    "n) New Task" << endl;
+    cin >> userInput;
+    if(cin.fail()){
+        cout << "Invalid input" << endl;
+        goto invalid;
+    }
+    switch(userInput){
+        case 'x':{
+            return;
+            break;
+        }
+        case 'c': {
+            calculateMarks();
+            goto restart;
+            break;
+        }
+        case 'e': {
+            invalidTask:
+            cout << "Please enter the number of the task you'd like to edit: ";
+            cin >> taskNum;
+            if(cin.fail() || taskNum < 1 || taskNum > gradeBook.size()){
+                cout << "Invalid input" << endl;
+                goto invalidTask;
+            }
+            else editTask(taskNum);
+            goto restart;
+            break;
+        }
+        case 'i': {
+            invalidName:
+            cout << "Please enter the number of the task you'd like to edit: ";
+            cin >> taskNum;
+            if(cin.fail() || taskNum < 1 || taskNum > gradeBook.size()){
+                cout << "Invalid input" << endl;
+                goto invalidName;
+            }
+            else inputMark(taskNum);
+            goto restart;
+            break;
+        }
+        case 'm': {
+            getCurrentMark();
+            goto restart;
+            break;
+        }
+        case 'n': {
+            addTask();
+            goto restart;
+            break;
+        }
+        default: {
+            cout << "Invalid Input" << endl;
+            goto restart;
+        }
+    }
+
 }
         
 void course::print(){
@@ -37,7 +98,7 @@ void course::print(){
     }
 }
         
-int course::getCurrentMark(){
+void course::getCurrentMark(){
     clearPage();
     double percentsGotten = 0, percentPotential = 0, currentMark, maxMark, minMark;
     for(int i = 0; i < gradeBook.size(); i++){
@@ -54,7 +115,6 @@ int course::getCurrentMark(){
     "Of the " << percentPotential << "% you could've got, you've gotten " << percentsGotten;
     cout << endl << "Maximum Potential Mark (assuming 100 on remaining marks): " << maxMark << "% "<< endl;
     cout << "Minimum Potential Mark(assuming 0 on remaining tasks): " << currentMark << "% " << endl;
-    return currentMark;
 }
 
 //Enter Assumed Marks for all non inputted tasks or Enter 
@@ -148,7 +208,119 @@ void course::calculateMarks(){
     }
 }
         
-void addTask();
-        void removeTask(int taskNum);
-        void editTask(int taskNum);
-};
+void course::addTask(){
+    string input;
+    float weight, mark;
+    invalidStringInput:
+    cout << "Please enter the name of your task: (max 12 characters)" << endl;
+    cin >> input;
+    if(cin.fail() || input.length() > 12){
+        cout << "Invalid Input" << endl;
+        goto invalidStringInput;
+    }
+    else{
+        invalidWeightInput:
+        cout << "Please enter the weight of your task: (between 0 and 100)" << endl;
+        cin >> weight;
+        if(cin.fail() || weight < 0 || weight > 100){
+            cout << "Invalid Input" << endl;
+            goto invalidWeightInput;
+        }
+        else{
+            invalidMarkInput:
+            cout << "If you would like to enter a mark for " << input << "please do so below" << endl 
+            << "To skip this step, input any negative number" << endl << "Values above 100% will be accepted for mark" << endl;
+            cin >> mark;
+            if(cin.fail()){
+                cout << "Invalid Input" << endl;
+                goto invalidMarkInput;
+            }
+            else if(mark < 0){
+                task n(input, weight);
+                gradeBook.push_back(n);
+                return;
+            }
+            else{
+                task n(input, weight, mark);
+            }
+        }
+    }
+}
+
+void course::removeTask(int taskNum){
+    int input = 0;
+    string name = gradeBook[taskNum-1].getName();
+    cout << "Are you sure you want to erase " << name << "? " << endl
+    << "Enter 1 to confirm, anything else to cancel" << endl;
+    cin >> input;
+    if(cin.fail() || input != 1){
+        cout << "Deletion cancelled" << endl;
+        return;
+    }
+    else gradeBook.erase(gradeBook.begin()+taskNum-1);
+    cout << name << " has been deleted" << endl;
+}
+
+void course::editTask(int taskNum){
+    int input = -1;
+    string newName;
+    float newMarkWeight;
+    restart:
+    cout << "You have selected the following task: ";
+    gradeBook[taskNum-1].print();
+    cout << endl << "OPTIONS" << endl <<
+    "1) Change Name" << endl <<
+    "2) Change Weight" << endl <<
+    "3) Change Mark" << endl <<
+    "4) Delete Task" << endl;
+    cin >> input;
+    switch(input){
+        case 1: {
+            invalidName:
+            cout << "Enter new name (max 12 Chars): ";
+            cin >> newName;
+            if(cin.fail() || newName.length() > 12){
+                cout << endl << "Invalid Input" << endl;
+                goto invalidName;
+            }
+            else gradeBook[taskNum - 1].setName(newName);
+            break;
+        }
+        case 2: {
+            invalidWeight:
+            cout << "Enter new weight (max 100%): ";
+            cin >> newMarkWeight;
+            if(cin.fail() || newMarkWeight < 0 || newMarkWeight > 100){
+                cout << endl << "Invalid Input" << endl;
+                goto invalidWeight;
+            }
+            else gradeBook[taskNum-1].setWeight(newMarkWeight);
+            break;
+        }
+        case 3: {
+            inputMark(taskNum);
+            break;
+        }
+        case 4: {
+            removeTask(taskNum);
+            break;
+        }
+        default: {
+            cout << "Invalid Input" << endl;
+            goto restart;
+        }
+    }
+}
+
+void course::inputMark(int taskNum){
+    double newMarkWeight;
+    invalidMark: 
+    cout << "Enter new mark: ";
+    cin >> newMarkWeight;
+    if(cin.fail() || newMarkWeight < 0){
+        cout << endl << "Invalid Input" << endl;
+        goto invalidMark;
+    }
+    else gradeBook[taskNum-1].setMark(newMarkWeight);
+}
+

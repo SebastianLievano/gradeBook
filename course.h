@@ -24,5 +24,6 @@ class course{
         void addTask();
         void removeTask(int taskNum);
         void editTask(int taskNum);
+        void inputMark(int taskNum);
 
 };

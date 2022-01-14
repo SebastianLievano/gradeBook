@@ -8,7 +8,6 @@ vector<course> classes;
 int openingMenu();
 void load(vector<course>& s);
 void save(const vector<course> s);
-void clearPage();
 void classManagement();
 
 
@@ -98,8 +97,4 @@ void classManagement(){
             goto restart;
         }
     }
-}
-
-void clearPage(){
-    for(int i = 0; i < 20; i++) cout << endl;
 }
