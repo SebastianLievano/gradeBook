@@ -1,5 +1,55 @@
 This is an in depth usage guide to GradeBook
 
+**SAVE AND LOAD FUNCTIONALITY**
+GradeBook is fully equipped to save and load your classes. Although it is fully optional, you may find it faster to write existing
+classes and tasks on the included 'save.txt' file, which will then be loaded whenever you open the program. Alternatively, you may
+use the existing program menus to create your classes/tasks, which will then be saved when you exit the program.
+
+The save.txt file is formatted like this (included below is the template and then an example)
+
+    numClasses
+    Class1Name
+    NumTasks1
+    Task1 Weight Mark
+    Task2 Weight Mark
+    Task3 Weight Mark
+    Task4 Weight Mark
+    Class2Name
+    NumTasks2
+    Task1 Weight Mark
+    Task2 Weight Mark
+
+NOTE: numClasses and numTasks must be accurate or your program will load incorrect/incomplete data
+NOTE: If you dont want to input/havent received a mark yet, write -5
+
+EXAMPLE
+
+    4
+    ECE244-C++
+    6
+    Lab1 5 100
+    Lab2 10 100
+    Lab3 10 90
+    Lab4 15 -5
+    Midterm 25 80
+    Final 35 -5
+    ECE241-Verilog
+    6
+    Lab1 10 100
+    Lab2 10 75
+    Lab3 10 0
+    Lab4 10 100
+    Lab5 10 95
+    Final 50 -5
+    ECE297-Software
+    1
+    Project 100 100
+    ECE212-Circuits
+    0
+
+
+
+**MENU USAGE**
 This menu displays upon running of the program. Note Classes are already loaded from the save.txt file
 OPTIONS
 **0) Manage Classes**
