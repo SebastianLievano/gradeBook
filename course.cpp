@@ -40,7 +40,6 @@ void course::menu(){
     char userInput;
     int taskNum;
     restart:
-    clearPage();
     invalid:
     cout << endl;
     print();
@@ -133,7 +132,7 @@ void course::getCurrentMark(){
         }
     }
     currentMark = (percentsGotten/percentPotential)*100;
-    maxMark = 100 - percentPotential + currentMark;
+    maxMark = 100 - percentPotential + percentsGotten;
     cout << fixed;
     cout << setprecision(2);
     cout << "Current Mark: " << currentMark << endl <<
@@ -149,10 +148,8 @@ float markReq(float target, float pivotWeight, float otherMark){
     if(target > (otherMark + pivotWeight) || target < otherMark){
         return -1;
     }
-    cout << "Percents Gotten = " << otherMark << endl;
     //Target = MarksFromPivot + Percents Gotten
     marksFromPivot = target - otherMark;
-    cout << "Marks From Pivot = " << marksFromPivot << endl;
     //MarksFromPivot = Weight * req / 100 -> req = 100Mp / Weight
     req = 100 * marksFromPivot / pivotWeight;
     return req;
@@ -160,35 +157,38 @@ float markReq(float target, float pivotWeight, float otherMark){
 }
 
 void course::calculateMarks(){
-    int userInput = 0, percentGotten = 0, taskPivot, pivotWeight, dummy, req;
-    double w, m;
+    int userInput = 0, taskPivot;
+    double w, m, percentGotten = 0, pivotWeight, dummy, req, doubleIn;
     clearPage();
     cout << fixed;
     cout << setprecision(2);
     invalid1:
     cout << name << " :MARK ESTIMATOR" << endl;
     print();
-    cout << "OPTIONS: " << endl << "1) Input all uninputted marks and get your mark back" << endl
-    << "2) Guess all marks but one, then receive the required values for the non guessed mark to achieve certain grades" << endl
-    << "    i.e) After your inputted marks: MAX(100 on task): 90%, MIN(0 on task): 50%, A: Need 75 on task, ..." << endl;
+    cout << "OPTIONS: " << endl << "1) Guesstimate all marks" << endl
+    << "2) Pivot Calculator" << endl
+    << "    -> Gives required mark on pivot to get certain grades. (i.e need 90 on exam to get 85 on course)" << endl;
     cin >> userInput;
-    cin.ignore(mil,'\n');
     if(cin.fail() || userInput > 2 || userInput < 1){
+        cin.ignore(mil,'\n');
         cin.clear();
         cout << "Invalid Input" << endl << endl << endl;
         goto invalid1;
     }
     if(userInput == 2){
+        cin.ignore(mil,'\n');
         invalid2:
         cout << "Which task would you like to look at?" << endl;
         cin >> taskPivot;
         if(cin.fail() || taskPivot < 1 || taskPivot > gradeBook.size()){
+            cin.ignore(mil,'\n');
             cin.clear();
             cout << "Invalid Input" << endl; goto invalid2;
         }
         taskPivot -= 1;
+        cout << "Your pivot task is " << gradeBook[taskPivot].getName() << endl;
     }
-
+    double valAdded;
     for(int i = 0; i < gradeBook.size(); i++){
             if(i == taskPivot && userInput == 2){
                 pivotWeight = gradeBook[i].getWeight();
@@ -198,22 +198,26 @@ void course::calculateMarks(){
                 m = gradeBook[i].getMark();
                 if(m == empty){
                     invalid3:
-                    cout << "Please enter a mark from 0 to 100 for " << m << ". Weight: " << w;
-                    cin >> dummy;
                     cin.ignore(mil,'\n');
-                    if(cin.fail() || userInput < 0 || userInput > 100){
+                    cout << "Please enter a mark from 0 to 100 for " << gradeBook[i].getName() << endl;
+                    cin >> doubleIn;
+                    if(cin.fail() || doubleIn < 0 || doubleIn > 100){   
                         cin.clear();
                         cout << "Invalid Input" << endl; 
                         goto invalid3;
                     }
-                    percentGotten += (userInput*w/100);
+                    valAdded = doubleIn*w/100;
+                    percentGotten += valAdded;
                     }
-                else percentGotten += (m*w/100);
+                else{
+                    valAdded = (m*w)/100;
+                    percentGotten += valAdded;
+                }
             }
     }
     if(userInput == 1)   cout << "With these scores, your final mark in " << name << " will be " << percentGotten << "%" << endl;
     else{
-        cout << "Your final marks for different marks in " << gradeBook[taskPivot].getName() << "will be:" << endl;
+        cout << "Your final marks for different marks in " << gradeBook[taskPivot].getName() << " will be:" << endl;
         cout << "MAX COURSE MARK: " << percentGotten + pivotWeight << "%" << endl;
         cout << "MIN COURSE MARK: " << percentGotten << "%" << endl;
         for(int i = 20; i < 110; i +=10){
@@ -223,10 +227,10 @@ void course::calculateMarks(){
             }
         }
         invalid4:
+        cin.ignore(mil,'\n');
         req = -2;
         cout << endl << "If there is a specific percent you'd like to calculate for, insert it below. To exit this menu, press 0" << endl;
         cin >> dummy;
-        cin.ignore(mil,'\n');
         if(dummy == 0) return;
         if(dummy < 0 || dummy > 100 || cin.fail()){ cout << "Invalid Input"; goto invalid4;}
         else req = markReq(dummy, pivotWeight, percentGotten);
@@ -270,7 +274,7 @@ void course::addTask(){
         }
         else{
             invalidMarkInput:
-            cout << "If you would like to enter a mark for " << input << "please do so below" << endl 
+            cout << "If you would like to enter a mark for " << input << " please do so below" << endl 
             << "To skip this step, input any negative number" << endl << "Values above 100% will be accepted for mark" << endl;
             cin >> mark;
             cin.ignore(mil,'\n');
@@ -305,7 +309,7 @@ void course::removeTask(int taskNum){
         cout << "Deletion cancelled" << endl;
         return;
     }
-    else gradeBook.erase(gradeBook.begin()+taskNum-1);
+    else gradeBook.erase((gradeBook.begin()+taskNum-1));
     cout << name << " has been deleted" << endl;
 }
 
@@ -365,17 +369,21 @@ void course::editTask(int taskNum){
 }
 
 void course::inputMark(int taskNum){
-    double newMarkWeight;
+    double newMark;
     invalidMark: 
-    cout << "Enter new mark: ";
-    cin >> newMarkWeight;
+    newMark = 1;
+    cout << "Enter new mark: (Input -1 to empty mark)";
+    cin >> newMark;
     cin.ignore(mil,'\n');
-    if(cin.fail() || newMarkWeight < 0){
+    if(newMark == -1){
+        gradeBook[taskNum-1].setMark(-5);
+    }
+    else if(cin.fail() || newMark < 0){
         cin.clear();
         cout << endl << "Invalid Input" << endl;
         goto invalidMark;
     }
-    else gradeBook[taskNum-1].setMark(newMarkWeight);
+    else gradeBook[taskNum-1].setMark(newMark);
 }
 
 void course::addExistingTask(task ta){

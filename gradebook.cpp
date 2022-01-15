@@ -1,34 +1,34 @@
 #include "course.h"
 
-vector<course> classes;
 
 //Helper Functions
-int openingMenu();
-void classManagement();
+int openingMenu(vector<course>& classes);
+void classManagement(vector<course> & classes);
 
-void load(vector<course> & c);
+void load(vector<course> & classes);
 
-void save(vector<course> & c);
+void save(vector<course> & classes);
 
 void clearPage();
 
 int main(){
     int userInput;
     bool keepGoing = true;
+    vector<course> classes;
     load(classes);
     while(keepGoing){
         clearPage();
-        userInput = openingMenu();
+        userInput = openingMenu(classes);
         clearPage();
         if(userInput == -1) break;
-        else if(userInput == 0) classManagement();
+        else if(userInput == 0) classManagement(classes);
         else classes[userInput - 1].menu();
     }
     save(classes);
     return 0;
 }
 
-int openingMenu(){
+int openingMenu(vector<course> & classes){
     int userInput, numClasses = classes.size();
     bool done = false;
     restart:
@@ -37,79 +37,81 @@ int openingMenu(){
     for(int i = 0; i < numClasses; ++i){
         cout << i+1 << ") " << classes[i].getName() << endl;
     }
+    userInput = -10;
     cout << "Menu Options: " << endl << "Enter corresponding number to access Class Menus"
     << endl << "0) Manage Classes" << endl << "Anything else to exit" << endl << ">";
     cin >> userInput;
-    cin.ignore(mil, '\n');
-    if(!cin.fail() && userInput > 0 && userInput < numClasses){
-        cin.clear();
+    if(!cin.fail() && userInput >= 0 && userInput < numClasses){ 
+        cin.ignore(mil, '\n');
         return userInput;
-    }
-    else if(userInput == 0){
-        classManagement();
-        goto restart;
-    }
-    else {
-        userInput = -1;
+        }
+    else if(cin.fail() || userInput < 0 || userInput > numClasses){
+        cin.clear();
+        cin.ignore(mil, '\n');
         cout << "Invalid Input. Are you sure you want to exit the program?" << endl
         << "Input 1 to exit. Input any other key to continue" << endl << ">";
-        cin >>  userInput;
-        cin.ignore(mil, '\n');
+        cin >> userInput;
         if(userInput == 1) return -1;
         if(cin.fail() || userInput != 1){
             cin.clear();
+            cin.ignore(mil, '\n');
             goto restart;
         }
     }
     return -1;
 }
 
-void classManagement(){
+void classManagement(vector<course>& classes){
     bool done = false;
-    int input = -1, numClasses = classes.size();
+    int numClasses, numInput, storage;
     string inputString;
-    restart:
+    char input = 'K';
     clearPage();
+    restart:
+    numClasses = classes.size();
     cout << "CLASS MANAGEMENT" << endl;
     cout << "GRADEBOOK" << endl << "Your classes are" << endl;
     for(int i = 0; i < numClasses; ++i){
         cout << i+1 << ") " << classes[i].getName() << endl;
     }
-    cout << "0) Return to Main menu" << endl << "1) Add Class" << 
-    endl << "2) Delete Class" << endl;
+    cout << "OPTIONS" << endl << "x) Return to Main menu" << endl << "+) Add Class" << 
+    endl << "-) Delete Class" << endl;
     cin >> input;
     cin.ignore(mil, '\n');
     switch(input){
-        case 0: return; break;
-        case 1: { 
+        case 'x': return; break;
+        case '+': { 
             cout << "Please enter the name of your new class" << endl;
             cin >> inputString;
             cin.ignore(mil, '\n');
             course c(inputString);
             classes.push_back(c);
             c.menu();
+            goto restart;
             break;
         }
-        case 2: {
+        case '-': {
             cout << "Please enter the number of the class you'd like to delete";
-            cin >> input;
+            cin >> numInput;
             cin.ignore(mil, '\n');
-            if(cin.fail() || input < 1 || input > numClasses){
+            if(cin.fail() || numInput < 1 || numInput > numClasses){
                 cin.clear();
                 cout << "Invalid Input" << endl;
 
             }
             else{
-                cout << "Are you sure you want to erase " << classes[input-1].getName() << "?" << endl;
+                storage = numInput;
+                cout << "Are you sure you want to erase " << classes[numInput-1].getName() << "?" << endl;
                 cout << "Press 1 to confirm, anything else to cancel" << endl;
-                cin >> input;
+                cin >> numInput;
                 cin.ignore(mil, '\n');
-                if(cin.fail() || input != 1){
+                if(cin.fail() || numInput != 1){
                     cin.clear();
                     cout << "Cancelled" << endl;
                 }
-                else classes.erase(classes.begin()+input-1);
+                else classes.erase(classes.begin()+storage-1);
             }
+            goto restart;
         }
         default: {
             cout << "Invalid Input" << endl;

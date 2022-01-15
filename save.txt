@@ -4,7 +4,7 @@ ECE244-C++
 Lab1 5 100
 Lab2 10 100
 Lab3 10 90
-Lab4 15 90
+Lab4 15 -5
 Midterm 25 80
 Final 35 -5
 ECE241-Verilog
