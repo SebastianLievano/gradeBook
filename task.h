@@ -1,5 +1,13 @@
+/*
+task.h by Sebastian Lievano Arzayus
+part of gradeBook C++ program
+TASK is a class for student assignments. In the current gradebook form, a task contains a name, a weight, and a mark
+*/
+
+
 #pragma once
 #include "globals.h"
+
 
 class task{
     private:
